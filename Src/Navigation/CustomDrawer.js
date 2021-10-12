@@ -9,7 +9,7 @@ const MyCustomDrawer = (props) => {
             <View>
                    <View>
                        <View>
-                       <Image style={{alignSelf:"center"}} source={require('../Component/images/girl.jpg')} />
+                       <Image style={{alignSelf:"center"}} source={require('../images/girl.jpg')} />
                        </View>
                    <Text style={{alignSelf:"center"}}>
                     Chaitra B

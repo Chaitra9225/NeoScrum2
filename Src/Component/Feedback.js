@@ -27,7 +27,7 @@ render(){
         <View style={{padding:10, backgroundColor:'white', borderWidth:1}}>
             <View style={{backgroundColor:'#87cefa',padding:10,borderWidth:1}}>
                         <View style={{padding:10,}} > 
-                        <Image style={{alignSelf:"center",width:120,height:120,borderRadius:120/2}} source={require('./images/girl.jpg')} />
+                        <Image style={{alignSelf:"center",width:120,height:120,borderRadius:120/2}} source={require('../images/girl.jpg')} />
                        </View>
                        <View>
                         <Text style={{fontSize:22,fontWeight:"bold",alignSelf:"center"}}>Chaitra B</Text>
@@ -70,7 +70,7 @@ render(){
         <View style={{padding:10, backgroundColor:'white', borderWidth:1}}>
             <View style={{backgroundColor:'#87cefa',padding:10,borderWidth:1}}>
                         <View style={{padding:10,}} > 
-                        <Image style={{alignSelf:"center",width:120,height:120,borderRadius:120/2}} source={require('./images/OIP.jpg')} />
+                        <Image style={{alignSelf:"center",width:120,height:120,borderRadius:120/2}} source={require('../images/OIP.jpg')} />
                        </View>
                        <View>
                         <Text style={{fontSize:22,fontWeight:"bold",alignSelf:"center"}}>Shashank Wankhede</Text>
@@ -114,7 +114,7 @@ render(){
         <View style={{padding:10, backgroundColor:'white', borderWidth:1}}>
             <View style={{backgroundColor:'#87cefa',padding:10,borderWidth:1}}>
                         <View style={{padding:10,}} > 
-                        <Image style={{alignSelf:"center",width:120,height:120,borderRadius:120/2}} source={require('./images/OIP.jpg')} />
+                        <Image style={{alignSelf:"center",width:120,height:120,borderRadius:120/2}} source={require('../images/OIP.jpg')} />
                        </View>
                        <View>
                         <Text style={{fontSize:22,fontWeight:"bold",alignSelf:"center"}}>Akshat Jain</Text>
@@ -160,7 +160,7 @@ render(){
          <View style={{padding:10, backgroundColor:'white', borderWidth:1}}>
             <View style={{backgroundColor:'#87cefa',padding:10,borderWidth:1}}>
                         <View style={{padding:10,}} > 
-                        <Image style={{alignSelf:"center",width:120,height:120,borderRadius:120/2}} source={require('./images/OIP.jpg')} />
+                        <Image style={{alignSelf:"center",width:120,height:120,borderRadius:120/2}} source={require('../images/OIP.jpg')} />
                        </View>
                        <View>
                         <Text style={{fontSize:22,fontWeight:"bold",alignSelf:"center"}}>Akash Kumavat</Text>
@@ -201,7 +201,7 @@ render(){
         <View style={{padding:10, backgroundColor:'white', borderWidth:1}}>
             <View style={{backgroundColor:'#87cefa',padding:10,borderWidth:1}}>
                         <View style={{padding:10,}} > 
-                        <Image style={{alignSelf:"center",width:120,height:120,borderRadius:120/2}} source={require('./images/OIP.jpg')} />
+                        <Image style={{alignSelf:"center",width:120,height:120,borderRadius:120/2}} source={require('../images/OIP.jpg')} />
                        </View>
                        <View>
                         <Text style={{fontSize:22,fontWeight:"bold",alignSelf:"center"}}>Imran Shaikh</Text>
@@ -243,7 +243,7 @@ render(){
 <View style={{padding:10, backgroundColor:'white', borderWidth:1}}>
             <View style={{backgroundColor:'#87cefa',padding:10,borderWidth:1}}>
                         <View style={{padding:10,}} > 
-                        <Image style={{alignSelf:"center",width:120,height:120,borderRadius:120/2}} source={require('./images/OIP.jpg')} />
+                        <Image style={{alignSelf:"center",width:120,height:120,borderRadius:120/2}} source={require('../images/OIP.jpg')} />
                        </View>
                        <View>
                         <Text style={{fontSize:22,fontWeight:"bold",alignSelf:"center"}}>Mohan kotak</Text>
@@ -286,7 +286,7 @@ render(){
         <View style={{padding:10, backgroundColor:'white', borderWidth:1}}>
             <View style={{backgroundColor:'#87cefa',padding:10,borderWidth:1}}>
                         <View style={{padding:10,}} > 
-                        <Image style={{alignSelf:"center",width:120,height:120,borderRadius:120/2}} source={require('./images/girl.jpg')} />
+                        <Image style={{alignSelf:"center",width:120,height:120,borderRadius:120/2}} source={require('../images/girl.jpg')} />
                        </View>
                        <View>
                         <Text style={{fontSize:22,fontWeight:"bold",alignSelf:"center"}}>Prachi Naik</Text>

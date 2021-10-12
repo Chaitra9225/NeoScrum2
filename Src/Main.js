@@ -1,7 +1,7 @@
 import React from 'react';
-
 import Login from '../Component/Login'
-import {Provider} from 'react-redux';
+import {Provider, connect} from 'react-redux';
+import { Actions } from 'react-native-router-flux';
 import {store} from './Store/StorePractice';
 
 const Main = () => {
@@ -12,4 +12,4 @@ const Main = () => {
   );
 };
 
-export default Main;
+export default connect(null,null) (Main);

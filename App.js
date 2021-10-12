@@ -26,8 +26,9 @@ import {
   ReloadInstructions,
 } from 'react-native/Libraries/NewAppScreen';
 import { Provider } from 'react-redux';
-import Navigation from './Navigation/StackNavigation';
-import store from './Src/Config/Store';
+import Navigation from './Src/Navigation/StackNavigation';
+import persist from './Src/Config/Store';
+import { PersistGate } from 'redux-persist/integration/react';
 
 
 
@@ -38,10 +39,12 @@ const App = () => {
     backgroundColor: isDarkMode ? Colors.darker : Colors.lighter,
   };
 
-  
+  const persistStore = persist();
   return (
-    <Provider store={store}>
+    <Provider Store={ persist.Store }>
+      <PersistGate loading={null} persistor={ persist.persistor }>
    <Navigation/>
+   </PersistGate>
    </Provider>
   );
 };
