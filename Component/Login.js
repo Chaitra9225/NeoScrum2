@@ -15,7 +15,6 @@ import FontAwesome5 from 'react-native-vector-icons/FontAwesome5';
 import {NavigationContainer} from '@react-navigation/native';
 import {createNativeStackNavigator} from '@react-navigation/native-stack';
 import SignUp from './SignUp'; 
-import {userLogin} from '../Src/actions/Action'
 import {connect} from 'react-redux';
 
 class Login extends Component {

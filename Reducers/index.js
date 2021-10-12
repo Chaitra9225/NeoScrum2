@@ -1,9 +1,7 @@
 import { createStore, combineReducers } from 'redux';
-import { reducer as formReducer } from 'redux-form';
-import Authreducer from "./Authreducer";
+import Authreducer from "./Authreducer.js";
 const reducers ={
-    Authreducer,
-    form: formReducer
+    Authreducer
 };
 
 export default combineReducers(reducers);
