@@ -29,9 +29,6 @@ class SignUp extends Component{
           this.setState({backfaceVisibility:visible})
         }).catch(e=>console.log(e));
       }
-     
-      bs = React.createRef();
-      fall = new Animated.Value(1);
 
       onEmailChange(event) {
         let regx =/^[a-zA-Z]{1,}?([a-zA-Z1-9]{1,})?([_])?([.])?([a-zA-Z1-9]{1,})?([.])?([a-zA-Z1-9]{1,})[@]?([a-z]{1,})?([.])?([a-z]{1,})?([.])?([a-z]{1,})$/;
@@ -65,12 +62,12 @@ class SignUp extends Component{
      
       
       log = () => {
-         if (this.state.email=="admin" && this.state.password=="admin"){
-             Alert.alert("Acoount is created")
-           this.props.navigation.navigate('Login')
+         if (this.state.email==='' && this.state.password===''){
+          Alert.alert("Please Enter Details")
          }
          else{
-           Alert.alert("Please Enter Details")
+           Alert.alert("Acoount is created")
+           this.props.navigation.navigate('Login')
          }
       }
 
@@ -130,13 +127,7 @@ class SignUp extends Component{
                      <View style={{borderRadius:15,justifyContent:'center',alignItems:'center'  }}>
                   <Image source={{uri:this.state.img}} style={{justifyContent:'center',alignItems:'center',backfaceVisibility:'hidden'}} height={100} width={100}/>
                   </View>
-                 </View>
-                     <Text onPress={this.renderInner} style={{alignSelf:"center",fontSize:18}}>{ADDICON} Add a Picture</Text>
-                     <View style={{borderRadius:15,justifyContent:'center',alignItems:'center'  }}>
-                  <Image source={{uri:this.state.img}} style={{justifyContent:'center',alignItems:'center',backfaceVisibility:'hidden'}} height={100} width={100}/>
-                  
-                 </View>
-                 
+                 </View>   
             </View>  
 
             <View style={{width: Dimensions.get('window').width, padding: 10,paddingTop:20,borderRadius:20}}>

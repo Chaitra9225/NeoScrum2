@@ -67,11 +67,11 @@ class Login extends Component {
 this.setState({secureTextEntry:false})
   };
   log = () => {
-     if (this.state.email=="admin" && this.state.password=="admin"){
-       this.props.navigation.navigate('Add')
+     if (this.state.email==='' && this.state.password===''){
+      Alert.alert("Please Enter Details")
      }
      else{
-       Alert.alert("Please Enter Details")
+         this.props.navigation.navigate('Add')
      }
   }
   
@@ -193,7 +193,7 @@ const styles = StyleSheet.create({
 });
 const mapStateToProps = (state) => {
   return {
-    data: state.data.loginData,
+    data: state?.data?.loginData,
     
   };
 };
@@ -205,5 +205,6 @@ const mapDispatchToProps = (dispatch) => {
   };
 };
 
+//export default Login;
 export default connect(mapStateToProps, mapDispatchToProps)(Login);
 
