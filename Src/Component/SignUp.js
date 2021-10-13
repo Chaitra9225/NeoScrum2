@@ -66,7 +66,7 @@ class SignUp extends Component{
       }
 
       createNewUser = (values) => {
-        this.props.dispatch(createNewUser());
+        this.props.dispatch(createNewUser(values));
       }
      
       
@@ -185,17 +185,11 @@ const styles = StyleSheet.create({
     
     })
 
-const mapStateToProps = (state) => {
-  return {
-    data: state?.data?.loginData,
-    
-  };
-};
 
 const mapDispatchToProps = (dispatch) => {
   return {
     
-    userLogin: (data) => dispatch(userLogin(data)),
+     dispatch
   };
 };
 

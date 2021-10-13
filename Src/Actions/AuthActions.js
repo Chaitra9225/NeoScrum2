@@ -4,10 +4,11 @@ import { fetchApi } from "../Service/Api"
 
 export const createNewUser = ( payload ) => {
 
-    const response = fetchApi();
+    return async (dispatch ) => {
+        try {
+            const response = await fetchApi("/user/create", "POST", payload, 200);
+        } catch(e){
 
-    return {
-        type: "user",
-        payload: "dfghjn"
+        }
     }
 }

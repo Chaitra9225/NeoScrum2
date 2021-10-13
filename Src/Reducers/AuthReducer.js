@@ -14,4 +14,4 @@ return state;
 
 export default combineReducers({
     createUser
-})
+});
