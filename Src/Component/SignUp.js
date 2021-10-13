@@ -1,9 +1,14 @@
 import React,{Component} from "react";
 import { Text, TextInput,EditText, View,StyleSheet,Dimensions,Button,Link,TouchableOpacity, Alert,Image } from 'react-native';
+import { connect } from "react-redux";
 import ImagePicker from 'react-native-image-crop-picker';
 import { block, event } from "react-native-reanimated";
 import FontAwesome5 from 'react-native-vector-icons/FontAwesome5';
-import { Field, reduxForm } from 'redux-form'
+import { Field, reduxForm } from 'redux-form';
+import { Actions } from "react-native-router-flux";
+import { compose } from "redux";
+import { createNewUser } from "../Actions/AuthActions"
+
 
 
 class SignUp extends Component{ 
@@ -59,16 +64,14 @@ class SignUp extends Component{
           this.setState({password:f})
         }
       }
+
+      createNewUser = (values) => {
+        this.props.dispatch(createNewUser());
+      }
      
       
-      log = () => {
-         if (this.state.email==='' && this.state.password===''){
-          Alert.alert("Please Enter Details")
-         }
-         else{
-           Alert.alert("Acoount is created")
-           this.props.navigation.navigate('Login')
-         }
+      log = (values) => {
+         this.createNewUser(values);
       }
 
 
@@ -182,5 +185,20 @@ const styles = StyleSheet.create({
     
     })
 
+const mapStateToProps = (state) => {
+  return {
+    data: state?.data?.loginData,
+    
+  };
+};
 
-export default SignUp
+const mapDispatchToProps = (dispatch) => {
+  return {
+    
+    userLogin: (data) => dispatch(userLogin(data)),
+  };
+};
+
+export default compose(connect(null,mapDispatchToProps))(SignUp);
+
+//export default connect(null,null)(SignUp);
