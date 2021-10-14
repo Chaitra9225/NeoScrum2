@@ -13,6 +13,9 @@ export const createNewUser = ( payload ) => {
             dispatch({type: "CREATE_USER_SUCCESS",
             token: response.token
              });
+             dispatch({type: "GET_USER_SUCCESS",
+           payload: response.responseBody
+             });
           }else {
              throw response;
           }

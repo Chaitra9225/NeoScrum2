@@ -7,7 +7,9 @@ import FontAwesome5 from 'react-native-vector-icons/FontAwesome5';
 import { Field, reduxForm } from 'redux-form';
 import { Actions } from "react-native-router-flux";
 import { compose } from "redux";
-import { createNewUser } from "../Actions/AuthActions"
+import { createNewUser } from "../Actions/AuthActions";
+import Loader from "./Loader";
+import { AuthReducer } from "../Reducers/AuthReducer"
 
 
 
@@ -19,7 +21,7 @@ class SignUp extends Component{
           checkEmail: '',
           checkPassword: '',
           email:"",
-          password:""
+          name:""
         };
       }
 
@@ -74,10 +76,6 @@ class SignUp extends Component{
          this.createNewUser(values);
       }
 
-
-
-
-
      
     submit =()=>{
         /* const {navigation} =this.props; */
@@ -89,10 +87,13 @@ class SignUp extends Component{
 
 
     render(){
+      const { handleSubmit, createUser} = this.props;
         return(
+         
 
              <View style={{backgroundColor: `#f0f8ff`,flex:1}} >
               <View style={styles.container1}>
+              {createUser?.isLoading && <Loader />}
                   <View style={{flexDirection: 'row', alignSelf:"center"}}>
                   
                   <Text style={{fontSize:50 , color:'black',fontWeight:"bold"   }}>Neo</Text>
@@ -110,19 +111,17 @@ class SignUp extends Component{
                   
               <View>
                  <View style={{paddingTop:25}}>
-                 <Text style={styles.Username}>UserName</Text>
+                 <Text style={styles.Username}>Name</Text>
                  </View>
                  <View style={{ width:Dimensions.get('window').width}}>
-                 <TextInput value={this.state.email} style={{height: 40,fontSize:20,margin: 12, borderBottomWidth: 2,paddingLeft: 10,}} placeholder="test@gmail.com" onChangeText={(event)=>{this.onEmailChange(event)}}/ >
-                 <TouchableOpacity style={{alignSelf:"flex-end",position:"absolute", top:15,right:7}}>{user}</TouchableOpacity> 
+                 <TextInput value={this.state.name} style={{height: 40,fontSize:20,margin: 12, borderBottomWidth: 2,paddingLeft: 10,}} placeholder="testname" onChangeText={(event)=>{this.onEmailChange(event)}}/ >
                  <Text style={{paddingLeft: 10, color: 'red'}}>{this.state.checkEmail}</Text>   
                  </View>
                  <View stle={{paddingTop:20}}>
-                 <Text style={styles.Username}>Password</Text>
+                 <Text style={styles.Username}>Email</Text>
                  </View>
                  <View style={{ width:Dimensions.get('window').width}}>
-                 <TextInput value={this.state.password} style={{height: 40,fontSize:20,margin: 12, borderBottomWidth: 2,paddingLeft: 12,}} placeholder="*****" onChangeText={(f)=>{this.onPasswordCheck(f)}} />
-                <TouchableOpacity style={{alignSelf:"flex-end",position:"absolute", top:15,right:7}}>{eyeSlash}</TouchableOpacity>
+                 <TextInput value={this.state.email} style={{height: 40,fontSize:20,margin: 12, borderBottomWidth: 2,paddingLeft: 12,}} placeholder="test@gamil.com" onChangeText={(f)=>{this.onPasswordCheck(f)}} />
                 <Text style={{paddingLeft: 10, color: 'red'}}>{this.state.checkPassword}</Text>  
                  </View>
                  <View style={{paddingTop:15}}>
@@ -185,6 +184,10 @@ const styles = StyleSheet.create({
     
     })
 
+    const mapStateToProps = (state) => {
+      createUser: state.AuthReducer?.createUser
+    }
+
 
 const mapDispatchToProps = (dispatch) => {
   return {
@@ -193,6 +196,9 @@ const mapDispatchToProps = (dispatch) => {
   };
 };
 
-export default compose(connect(null,mapDispatchToProps))(SignUp);
-
-//export default connect(null,null)(SignUp);
+export default compose(
+  connect(
+    mapStateToProps,
+    mapDispatchToProps)
+    )
+    (SignUp);

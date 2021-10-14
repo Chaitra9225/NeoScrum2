@@ -1,4 +1,4 @@
-const BASE_URL = "http://192.168.29.24:3333";
+const BASE_URL = "https://quiet-harbor-07900.herokuapp.com/register";
 
 export const Api = (url,method,body=null,headers ={}) => {
 try {
@@ -43,6 +43,7 @@ try {
         headers["x-auth"] = token;
     }
     const response = await Api(url,method,body,headers);
+
     if ( response.status === statusCode) {
         result.success = true;
 

@@ -10,7 +10,8 @@ const createUser = (state = {}, action) => {
                     token: null,
                     isError: false,
                     isSuccess: false,
-                    errors: null
+                    errors: null,
+                    isLoggedIn: false
               }
             case "CREATE_USER_SUCCESS":
                  return {
@@ -18,7 +19,8 @@ const createUser = (state = {}, action) => {
                     token: action.token,
                     isError: false,
                     isSuccess: true,
-                    errors: null
+                    errors: null,
+                    isLoggedIn: true
                  }  
              case "CREATE_USER_SFAIL":
                  return {
@@ -26,7 +28,8 @@ const createUser = (state = {}, action) => {
                      token: action.token,
                      isError: true,
                      isSuccess: false,
-                     errors: action.payload
+                     errors: action.payload,
+                     isLoggedIn: false
                     }     
        
            default:
