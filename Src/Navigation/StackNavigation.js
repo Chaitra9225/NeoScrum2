@@ -8,7 +8,7 @@ import HomePage from '../Component/HomePage';
 import Feedback from '../Component/Feedback';
 import {createDrawerNavigator} from '@react-navigation/drawer'
 import FontAwesome5 from 'react-native-vector-icons/FontAwesome5';
-import MyCustomDrawer from './CustomDrawer'
+import MyCustomDrawer from './CustomDrawer';
 
 const Drawer = createDrawerNavigator();
 class Back extends Component{

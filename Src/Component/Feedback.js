@@ -105,7 +105,6 @@ render(){
                                 </View>
                                 </TouchableOpacity>
                                 </View>
-
         </View>
 
 

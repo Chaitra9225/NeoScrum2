@@ -32,6 +32,7 @@
  
  
  
+ 
  const App = () => {
    const isDarkMode = useColorScheme() === 'dark';
  
@@ -41,11 +42,9 @@
  
    
    return (
-     <Provider store={ store }>
-       <PersistGate loading={null} persistor={ persistor }>
+    
     <Navigation/>
-    </PersistGate>
-    </Provider>
+    
    );
  };
  

@@ -12,10 +12,13 @@ import {
   Alert,
 } from 'react-native';
 import FontAwesome5 from 'react-native-vector-icons/FontAwesome5';
-import {NavigationContainer} from '@react-navigation/native';
-import {createNativeStackNavigator} from '@react-navigation/native-stack';
-import SignUp from './SignUp'; 
-import {connect} from 'react-redux';
+import axios from 'axios';
+import { Signin } from '../Store/Action/action';
+import { connect } from 'react-redux';
+import { bindActionCreators } from 'redux';
+
+
+
 
 class Login extends Component {
   /* Constructor For State*/
@@ -28,6 +31,38 @@ class Login extends Component {
       password:""
     };
   }
+
+
+  onha = async () => {
+   
+
+    var config = {
+      method: "post",
+      url: "https://quiet-harbor-07900.herokuapp.com/DeveloperSignin",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      data:{'email':this.state.email,'password':this.state.password},
+  }; 
+
+  try {
+      const response = await axios(config)
+      console.log(response.status)
+      if(response.status===200) {
+       this.props.navigation.navigate('Add');
+      } 
+      
+
+     }
+      
+      catch(err){  Alert.alert("please enter valid credentials");}
+      
+
+  }
+
+
+
+
   onEmailChange(event) {
     let regx =/^[a-zA-Z]{1,}?([a-zA-Z1-9]{1,})?([_])?([.])?([a-zA-Z1-9]{1,})?([.])?([a-zA-Z1-9]{1,})[@]?([a-z]{1,})?([.])?([a-z]{1,})?([.])?([a-z]{1,})$/;
     this.setState({checkEmail: ''});
@@ -63,15 +98,16 @@ class Login extends Component {
     console.log('this.props.navigation', this.props.navigation);
     this.props.navigation.navigate('SignUp');
   };
-  pasvis = () => {
-this.setState({secureTextEntry:false})
-  };
+
+
+
+
   log = () => {
-     if (this.state.email==='' && this.state.password===''){
-      Alert.alert("Please Enter Details")
-     }
+     if (this.state.email!="" && this.state.password!=""){
+            this.onha();
+    }
      else{
-         this.props.navigation.navigate('Add')
+       Alert.alert("Please Enter Details")
      }
   }
   
@@ -130,11 +166,10 @@ this.setState({secureTextEntry:false})
                 this.onPasswordCheck(f);
               }}
               style={styles.inputField}
-              placeholder="*****"
-              secureTextEntry={true}>
+              placeholder="*****">
               
             </TextInput>
-            <TouchableOpacity style={{alignSelf:"flex-end",position:"absolute", top:15,right:7}} onPress={() => this.pasvis()}>{eye}</TouchableOpacity>
+            <TouchableOpacity style={{alignSelf:"flex-end",position:"absolute", top:15,right:7}}>{eye}</TouchableOpacity>
             <Text style={{paddingLeft: 10, color: 'red'}}>
               {this.state.checkPassword}
             </Text>
@@ -163,6 +198,21 @@ this.setState({secureTextEntry:false})
   }
 }
 
+function mapStateToProps(state){
+  return{
+    user : state.User
+  }
+}
+
+function mapDispatchToProps(dispatch){
+
+}
+
+
+
+
+
+
 /* Icon For USer */
 const user = <FontAwesome5 name={'user'} solid style={{fontSize:20}}/>;
 /* Icon For Password */
@@ -172,7 +222,7 @@ const styles = StyleSheet.create({
   container1: {
     maxWidth: 500,
     justifyContent: 'center',
-    paddingTop: 150,
+   
   },
   Username: {
     fontSize: 18,
@@ -191,20 +241,6 @@ const styles = StyleSheet.create({
     fontSize:20,
   },
 });
-const mapStateToProps = (state) => {
-  return {
-    data: state?.data?.loginData,
-    
-  };
-};
 
-const mapDispatchToProps = (dispatch) => {
-  return {
-    
-    userLogin: (data) => dispatch(userLogin(data)),
-  };
-};
-
-//export default Login;
-export default connect(mapStateToProps, mapDispatchToProps)(Login);
+export default Login;
 
