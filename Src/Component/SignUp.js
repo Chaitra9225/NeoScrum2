@@ -1,5 +1,5 @@
 import React,{Component} from "react";
-import { Text, TextInput,EditText, View,StyleSheet,Dimensions,Button,Link,TouchableOpacity, Alert,Image } from 'react-native';
+import { Text, TextInput,EditText, View,Modal,StyleSheet,Dimensions,Button,Link,TouchableOpacity, Alert,Image } from 'react-native';
 import ImagePicker from 'react-native-image-crop-picker';
 import FontAwesome5 from 'react-native-vector-icons/FontAwesome5';
 import axios from "axios";
@@ -14,11 +14,14 @@ class SignUp extends Component{
           email:"",
           only:'',
           name:'',
-          checkname:''
+          checkname:'',
+          modalVisible: false
         };
       }
 
-      
+      setModalVisible = (visible) => {
+    this.setState({ modalVisible: visible });
+  }
 
       takephoto=()=>{
         ImagePicker.openCamera({
@@ -84,6 +87,7 @@ class SignUp extends Component{
         this.props.navigation.navigate('Login');
         }
         onha = async () => {
+          const {navigation} = this.props;
           var data = new FormData();
           let headers = {
             'Accept': 'application/json',
@@ -114,7 +118,7 @@ class SignUp extends Component{
                           onPress: () => console.log("Cancel Pressed"),
                           style: "cancel"
                         },
-                        { text: "OK", onPress: () => this.gotologin() }
+                        { text: "OK", onPress: () => navigation.navigate('Login') }
                       ]
                     );
                    // Alert.alert("successfully registered" + response.data.password);

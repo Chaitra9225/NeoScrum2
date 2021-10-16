@@ -116,6 +116,7 @@ class Login extends Component {
 
   render() {
     return (
+      
       <View style={{backgroundColor: '#f0f8ff', flex: 1}}>
         <View style={styles.container1}>
           <View style={{flexDirection: 'row', alignSelf: 'center'}}>
@@ -220,6 +221,7 @@ const eye = <FontAwesome5 name={'eye-slash'} solid style={{fontSize:20}} />;
 /* Styles */
 const styles = StyleSheet.create({
   container1: {
+    paddingTop: 120,
     maxWidth: 500,
     justifyContent: 'center',
    
