@@ -1,54 +1,57 @@
 import React,{Component} from "react";
-import { Text, TextInput,EditText, View,Modal,StyleSheet,Dimensions,Button,Link,TouchableOpacity, Alert,Image } from 'react-native';
+import { Text, TextInput,EditText, View,StyleSheet,Dimensions,Pressable,Button,Link,TouchableOpacity, Alert,Image,KeyboardAvoidingView , Modal} from 'react-native';
 import ImagePicker from 'react-native-image-crop-picker';
+import { block, event } from "react-native-reanimated";
 import FontAwesome5 from 'react-native-vector-icons/FontAwesome5';
 import axios from "axios";
+
+
 class SignUp extends Component{ 
     constructor( ) {
         super();
         this.state = {
-            img:{},
-            imguri:null,
+          img:{},
+          imguri:null,
           checkEmail: '',
-          password:'',
           email:"",
           only:'',
           name:'',
           checkname:'',
+          hit:0,
+          wid:0,
           modalVisible: false
         };
       }
 
-      setModalVisible = (visible) => {
-    this.setState({ modalVisible: visible });
-  }
-
       takephoto=()=>{
         ImagePicker.openCamera({
-          width: 300,
-          height: 400,
           cropping: true,
         }).then(image => {
           console.log(image);
+          this.setState({hit:130})
           this.setState({img:image.path})
           this.setState({imguri:image.path})
+        
           var name = image.path;
              this.setState({only : name.replace(/^.*[\\\/]/, '')})
         }).catch(e=>console.log(e));
       }
 
       onEmailChange(event) {
-        let regx =/^[a-zA-Z]{1,}?([a-zA-Z1-9]{1,})?([_])?([.])?([a-zA-Z1-9]{1,})?([.])?([a-zA-Z1-9]{1,})[@]?([a-z]{1,})?([.])?([a-z]{1,})?([.])?([a-z]{1,})$/;
+        let regx =/^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/;
         this.setState({checkEmail: ''});
         if (event == '') {
           this.setState({checkEmail: 'Please enter Email'});
           this.setState({email:event})
+          return false 
         } else if (!regx.test(event)) {
           this.setState({checkEmail: 'Please Enter A valid Email'});
           this.setState({email:event})
+          return false                 
         } else {
           this.setState({checkEmail: ''});
           this.setState({email:event})
+          return true
         }
       }
     
@@ -58,36 +61,46 @@ class SignUp extends Component{
         if (f == '') {
           this.setState({checkname: 'Please enter Name'});
           this.setState({name:f})
+          return false
         } else if (!reggexp.test(f)) {
-          this.setState({checkname: 'Alphanumeric Between 8 to 12 character'});
+          this.setState({checkname: 'Name Should minimum of 3 character'});
           this.setState({name:f})
+          return false
         } else {
           this.setState({checkname: ''});
           this.setState({name:f})
+          return true
         }
-      }
-     componentDidMount(){
-       this.onha();
-     }
-      log = () => {
-         if (this.state.email!="" && this.state.name!=""){
-            this.componentDidMount()
-            console.log(this.state.password);
-         }
-         else{
-           Alert.alert("Please Enter Details")
-         }
-      }
-      gotologin = () => {
-        this.props.navigation.navigate('Login');
       }
 
-    submit =()=>{
-        /* const {navigation} =this.props; */
+
+
+      setModalVisible = (visible) => {
+        this.setState({ modalVisible: visible });
+      }
+
+
+      
+      log  ()  {
+         if (this.state.email!="" || this.state.name!="" || this.state.imguri!=""){
+                  this.onPostData()
+           }
+           else{
+            Alert.alert("Please Enter Correct Details")
+          }
+        
+        }
+        
+      submit =()=>{       
         this.props.navigation.navigate('Login');
         }
-        onha = async () => {
-          const {navigation} = this.props;
+
+          //const {navigation}= this.props;
+      
+
+
+        onPostData = async () => {
+          
           var data = new FormData();
           let headers = {
             'Accept': 'application/json',
@@ -101,45 +114,77 @@ class SignUp extends Component{
                data.append('email',this.state.email);
                       data.append('profileImage',imgdata);
                console.log(" form data", data)
+  
+  
          return await axios.post('https://quiet-harbor-07900.herokuapp.com/register',data
               ,{
       
               "headers": {headers},})
-              .then(function(response) {
-                  if (response.status==200){
-                    console.log("Register")
-                    console.log(response.data)
-                    Alert.alert(
-                      "successfully registered",
-                      "Your password is : "  + response.data.password,
-                      [
-                        {
-                          text: "Cancel",
-                          onPress: () => console.log("Cancel Pressed"),
-                          style: "cancel"
-                        },
-                        { text: "OK", onPress: () => navigation.navigate('Login') }
-                      ]
-                    );
-                   // Alert.alert("successfully registered" + response.data.password);
-                   // this.props.navigation.navigate('Login');
-                    return response
-                  }
+          
+              .then(function (response) {
+             
+                if (response.status == 200) {
+                  console.log('Register');
+                  console.log(response.data);
+                Alert.alert(
+                    "successfully registered",
+                    "Your password is : "  + response.data.password,
+                    [
+                      {
+                        text: "Cancel",
+                        onPress: () => console.log("Cancel Pressed"),
+                        style: "cancel"
+                      },
+                     { text: "OK", onPress: () => this.props.navigation.navigate('Login') }
+                    ]
+                  ); 
+                // Alert.alert(`Password ${response.data.password} Please take Screenshot of it`);
+                //  this.props.navigation.navigate('Login');
+                  return response;
+                 
+                }
                 else{
-                  console.log("some error")
-                }})
-
-              .catch(function(error) {
-              console.log(error);
-              
-              });}
+                  console.log("Some error is generating... please make sure you have filled all the field with proper credentials")
+                  Alert.alert("Some error is generating... please make sure you have filled all the field with proper credentials")
+                } })
+                 }
 
 
+    onModal= () => {
+      const { modalVisible } = this.state;
+      <Modal
+      animationType="slide"
+      transparent={true}
+      visible={modalVisible}
+      onRequestClose={() => {
+        Alert.alert("Modal has been closed.");
+        this.setModalVisible(!modalVisible);
+      }}
+    >
+
+<View style={styles.centeredView}>
+            <View style={styles.modalView}>
+              <Text style={styles.modalText}>Hello World!</Text>
+              <Pressable
+                style={[styles.button, styles.buttonClose]}
+                onPress={() => this.setModalVisible(!modalVisible)}
+              >
+                <Text style={styles.textStyle}>Hide Modal</Text>
+              </Pressable>
+            </View>
+          </View>
+
+      </Modal>
+    }
+
+
+
+  
 
     render(){
         return(
-                
-
+          <KeyboardAvoidingView behavior={Platform.OS === "android" ? "padding" : "height"} style={{flex:1}}>
+      
              <View style={{backgroundColor: `#f0f8ff`,flex:1}} >
               <View style={styles.container1}>
                   <View style={{flexDirection: 'row', alignSelf:"center"}}>
@@ -157,27 +202,27 @@ class SignUp extends Component{
                   </View>
                  
                   
-              <View>
+                  <View>
                  <View style={{paddingTop:25}}>
                  <Text style={styles.Username}>Full Name</Text>
                  </View>
                  <View style={{ width:Dimensions.get('window').width}}>
-                 <TextInput value={this.state.name} style={{height: 40,fontSize:20,margin: 12, borderBottomWidth: 2,paddingLeft: 10,}} placeholder="JOE DOE" onChangeText={(f)=>{this.onNameChange(f)}}/ >
-                 <TouchableOpacity style={{alignSelf:"flex-end",position:"absolute", top:15,right:7}}>{user}</TouchableOpacity> 
+                 <TextInput value={this.state.name} style={{height: 40,fontSize:20,margin: 12, borderBottomWidth: 2,paddingLeft: 10,}} placeholder="UserName" onChangeText={(f)=>{this.onNameChange(f)}} />
+                 <TouchableOpacity style={{alignSelf:"flex-end",position:"absolute", top:15,right:15}}>{user}</TouchableOpacity> 
                  <Text style={{paddingLeft: 10, color: 'red'}}>{this.state.checkname}</Text>   
                  </View>
                  <View stle={{paddingTop:20}}>
                  <Text style={styles.Username}>Email</Text>
                  </View>
                  <View style={{ width:Dimensions.get('window').width}}>
-                 <TextInput value={this.state.email} style={{height: 40,fontSize:20,margin: 12, borderBottomWidth: 2,paddingLeft: 12,}} placeholder="Joe@gmail.com"  onChangeText={(event)=>{this.onEmailChange(event)}} />
-                <TouchableOpacity style={{alignSelf:"flex-end",position:"absolute", top:15,right:7}}>{eyeSlash}</TouchableOpacity>
+                 <TextInput value={this.state.email} style={{height: 40,fontSize:20,margin: 12, borderBottomWidth: 2,paddingLeft: 12,}} placeholder="UserName@gmail.com"  onChangeText={(event)=>{this.onEmailChange(event)}} />
+                <TouchableOpacity style={{alignSelf:"flex-end",position:"absolute", top:15,right:15}}>{eyeSlash}</TouchableOpacity>
                 <Text style={{paddingLeft: 10, color: 'red'}}>{this.state.checkEmail}</Text>  
                  </View>
-                 <View style={{paddingTop:15}}>
+                 <View style={{paddingTop:5}}>
                      <Text onPress={this.takephoto} style={{alignSelf:"center",fontSize:18}}>{ADDICON} Add a Picture</Text>
                      <View style={{borderRadius:15,justifyContent:'center',alignItems:'center'  }}>
-                  <Image source={{uri:this.state.imguri}} style={{justifyContent:'center',alignItems:'center',backfaceVisibility:'hidden'}} height={100} width={100}/>
+                  <Image source={{uri:this.state.imguri}} style={{justifyContent:'center',alignItems:'center',backfaceVisibility:'hidden'}} height={this.state.hit} width={130}/>
                   </View>
                  </View>
                  
@@ -199,23 +244,20 @@ class SignUp extends Component{
           </View>
            
             <TouchableOpacity onPress={() => this.submit()} style={{paddingTop:10}}>
-                    <Text style={{fontWeight:"bold",alignSelf:"center"}}> Have an Account Sign in?</Text>
+                    <Text style={{fontWeight:"bold",alignSelf:"center"}}> Already Have an Account Sign In?</Text>
                     </TouchableOpacity>
-             
-
-
-
-       
         </View>    
+        </KeyboardAvoidingView>
         )
     }
 
 }
 
 
-const ADDICON = <FontAwesome5 name={'plus'} solid style={{fontSize:15}} />;
-const eyeSlash = <FontAwesome5 name={'eye-slash'} solid style={{fontSize:20}} />;
-const user = <FontAwesome5 name={'user'} solid style={{fontSize:20}} />;
+const ADDICON = <FontAwesome5 name={'plus'} solid style={{fontSize:20}} />;
+const eyeSlash = <FontAwesome5 name={'envelope'} solid style={{fontSize:25}} />;
+const user = <FontAwesome5 name={'user'} solid style={{fontSize:25}} />;
+
 
 
 
@@ -232,6 +274,47 @@ const styles = StyleSheet.create({
         fontSize:18,
         paddingLeft:10
     },
+    centeredView: {
+      flex: 1,
+      justifyContent: "center",
+      alignItems: "center",
+      marginTop: 22
+    },
+    modalView: {
+      margin: 20,
+      backgroundColor: "white",
+      borderRadius: 20,
+      padding: 35,
+      alignItems: "center",
+      shadowColor: "#000",
+      shadowOffset: {
+        width: 0,
+        height: 2
+      },
+      shadowOpacity: 0.25,
+      shadowRadius: 4,
+      elevation: 5
+    },
+    button: {
+      borderRadius: 20,
+      padding: 10,
+      elevation: 2
+    },
+    buttonOpen: {
+      backgroundColor: "#F194FF",
+    },
+    buttonClose: {
+      backgroundColor: "#2196F3",
+    },
+    textStyle: {
+      color: "white",
+      fontWeight: "bold",
+      textAlign: "center"
+    },
+    modalText: {
+      marginBottom: 15,
+      textAlign: "center"
+    }
     
     })
 

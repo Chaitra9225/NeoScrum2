@@ -4,11 +4,13 @@ import SignUp from '../Component/SignUp'
 import { NavigationContainer } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs'
-import HomePage from '../Component/HomePage';
+import HomePage from '../Component/HomePage'
 import Feedback from '../Component/Feedback';
 import {createDrawerNavigator} from '@react-navigation/drawer'
 import FontAwesome5 from 'react-native-vector-icons/FontAwesome5';
-import MyCustomDrawer from './CustomDrawer';
+import MyCustomDrawer from './CustomDrawer'
+import { connect } from 'react-redux';
+
 
 const Drawer = createDrawerNavigator();
 class Back extends Component{
@@ -87,9 +89,9 @@ class  Main extends Component {
           tabBarIcon:({ color, size }) => {
             let iconName;
     
-            if (route.name === 'Home') {
+            if (route.name === 'sub') {
               iconName = 'home'
-            } else if (route.name === 'Feedback') {
+            } else if (route.name === 'mul') {
               iconName = 'comment';
             }
     
@@ -97,8 +99,8 @@ class  Main extends Component {
             return <FontAwesome5 name={iconName} size={size} color={color} />;
           },
         })}>
-        <Tab.Screen options={{tabBarLabel:'Home'}} name="Home" component={Back} />
-        <Tab.Screen options={{tabBarLabel:'Feedback'}} name="Feedback" component={Front}/>
+        <Tab.Screen options={{tabBarLabel:'Home'}} name="sub" component={Back} />
+        <Tab.Screen options={{tabBarLabel:'Feedback'}} name="mul" component={Front}/>
       </Tab.Navigator>
     );
   }
@@ -106,17 +108,35 @@ class  Main extends Component {
 
 const Stack = createNativeStackNavigator();
 class Navigation extends Component{
-    render(){
-        return(
+    render(props){
+    return(
             <NavigationContainer >
     
-            <Stack.Navigator screenOptions={{headerShown: false}}>
-              <Stack.Screen name="Login" component={Login} />
-               <Stack.Screen name="SignUp" component={SignUp} />
-               <Stack.Screen name="Add" component={Main}/>
-           </Stack.Navigator>
+            <Stack.Navigator screenOptions={{headerShown: false}}> 
+            
+  {this.props.isLogged ? <Stack.Screen name="Add" component={Main}/> : 
+  <>
+  <Stack.Screen name="Login" component={Login} />
+<Stack.Screen name="SignUp" component={SignUp} />
+  </>
+  
+  } 
+
+            
+           
+              
+            
+    
+            </Stack.Navigator>
              </NavigationContainer>
         )
     }
 }
-export default Navigation
+const mapStateToProps = (state)=>{
+return{
+  isLogged : state.data.isLogged
+}
+}
+
+export default connect(mapStateToProps,null)(Navigation)
+

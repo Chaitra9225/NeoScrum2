@@ -27,7 +27,7 @@
  } from 'react-native/Libraries/NewAppScreen';
  import { Provider } from 'react-redux';
  import Navigation from './Src/Navigation/StackNavigation';
- import {store,persistor} from './Src/Config/Store';
+ import {store,persistor} from './Src/Redux/Store/StorePractice';
  import { PersistGate } from 'redux-persist/integration/react';
  
  
@@ -43,7 +43,9 @@
    
    return (
     
-    <Navigation/>
+    <Provider store={store}>
+      <Navigation/>
+      </Provider>
     
    );
  };

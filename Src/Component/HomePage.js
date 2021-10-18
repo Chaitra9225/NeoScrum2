@@ -1,81 +1,61 @@
 import React,{Component} from 'react';
-import { Text, View,TextInput,ScrollView, Button } from 'react-native';
+import { Text,
+   View,
+   TextInput,
+   ScrollView,
+    Button,Card } 
+    from 'react-native';
 import FontAwesome5 from 'react-native-vector-icons/FontAwesome5';           
 
-import { NavigationContainer } from '@react-navigation/native';
-import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
+
+import {connect} from 'react-redux'
+import { FlatList } from 'react-native';
+import HomeContainer from './HomeComponent'
 
 class HomePage extends Component{
+
+constructor(props){
+super(props)
+this.state={
+Feedback:[],
+
+}
+}
+
+renderComponent = ({item}) =>{
+  return(
+
+  <HomeContainer name={item.name} Feedback={item.feadback } date={item.date} />
+
+  )
+  }
+
+
+
+componentDidMount(){
+  this.setState({
+    Feedback:this.props.user.Feedback
+  })
+  console.log("In home screen",this.state.Feedback)
+}
+
+
     render(){
         return(
-          <View>
-         </View>
+          <FlatList keyExtractor={(item)=>item._id} data={this.state.Feedback} renderItem={this.renderComponent} />
             )
     }
   }
             
-            function HomeScreen() {
-              return (
-                <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
-                  
-                </View>
-              );
-            }
+
+
+
+const mapStateToProps = (state) =>{
+  return{
+  user:state.data,
+
+  }
+}
+          
             
-            function SettingsScreen() {
-              return (
-                <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
-                  <Text>Settings!</Text>
-                </View>
-              );
-            }
-            
-            const Tab = createBottomTabNavigator();
-            
-             function App() {
-              return (
-                  <View>
-                    
-                <NavigationContainer>
-                  <Tab.Navigator
-                    screenOptions={({ route }) => ({
-                      tabBarIcon: ({ focused, color, size }) => {
-                        if (route.name === 'Home') {
-                          return (
-                            <FontAwesome5
-                              name={
-                                focused
-                                  ? 'home'
-                                  : 'home'
-                              }
-                              size={size}
-                              color={color}
-                            />
-                          );
-                        } else if (route.name === 'comments') {
-                          return (
-                            <FontAwesome5
-                              name={focused ? 'comment' : 'comment-slash'}
-                              size={size}
-                              color={color}
-                            />
-                          );
-                        }
-                      },
-                      tabBarInactiveTintColor: 'gray',
-                      tabBarActiveTintColor: 'blue',
-                    })}
-                  >
-                    <Tab.Screen
-                      name="Home"
-                      component={HomeScreen}
-                      options={{   }}
-                    />
-                    <Tab.Screen name="comments" component={SettingsScreen} />
-                  </Tab.Navigator>
-                </NavigationContainer>
-                </View>
-              );
-            }
-            
-export default HomePage
+export default connect (mapStateToProps,null)(HomePage)

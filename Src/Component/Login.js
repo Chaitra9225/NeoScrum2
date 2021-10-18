@@ -10,62 +10,34 @@ import {
   Link,
   TouchableOpacity,
   Alert,
+  KeyboardAvoidingView,
 } from 'react-native';
 import FontAwesome5 from 'react-native-vector-icons/FontAwesome5';
+import {NavigationContainer} from '@react-navigation/native';
+import {createNativeStackNavigator} from '@react-navigation/native-stack';
+import SignUp from './SignUp'; 
+import {rawdata} from '../Redux/actions/Action'
+import {connect} from 'react-redux';
 import axios from 'axios';
-import { Signin } from '../Store/Action/action';
-import { connect } from 'react-redux';
-import { bindActionCreators } from 'redux';
-
-
-
 
 class Login extends Component {
   /* Constructor For State*/
-  constructor() {
-    super();
+  constructor(props) {
+    super(props);
     this.state = {
       checkEmail: '',
       checkPassword: '',
       email:"",
-      password:""
+      password:"",
+      token:'',
+     Fee:'',
+     name:'',
+     psw: true
     };
   }
-
-
-  onha = async () => {
-   
-
-    var config = {
-      method: "post",
-      url: "https://quiet-harbor-07900.herokuapp.com/DeveloperSignin",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      data:{'email':this.state.email,'password':this.state.password},
-  }; 
-
-  try {
-      const response = await axios(config)
-      console.log(response.status)
-      if(response.status===200) {
-       this.props.navigation.navigate('Add');
-      } 
-      
-
-     }
-      
-      catch(err){  Alert.alert("please enter valid credentials");}
-      
-
-  }
-
-
-
-
   onEmailChange(event) {
-    let regx =/^[a-zA-Z]{1,}?([a-zA-Z1-9]{1,})?([_])?([.])?([a-zA-Z1-9]{1,})?([.])?([a-zA-Z1-9]{1,})[@]?([a-z]{1,})?([.])?([a-z]{1,})?([.])?([a-z]{1,})$/;
-    this.setState({checkEmail: ''});
+    let regx =/^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/;
+        this.setState({checkEmail: ''});
     if (event == '') {
       this.setState({checkEmail: 'Please enter Email'});
       this.setState({email:event})
@@ -104,19 +76,68 @@ class Login extends Component {
 
   log = () => {
      if (this.state.email!="" && this.state.password!=""){
-            this.onha();
-    }
-     else{
-       Alert.alert("Please Enter Details")
+
+       let data ={email:this.state.email,password:this.state.password}
+       this.onLogged()
+
+       
+
+    
      }
   }
   
+  onLogged = async () => {
+    var config = {
+      method: "post",
+      url: "https://quiet-harbor-07900.herokuapp.com/DeveloperSignin",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      data:{'email':this.state.email,'password':this.state.password},
+  }; 
 
-  
+  try {
+      const response = await axios(config)
+      console.log(response.data)
+      
+      if (response.status==200){
+        Alert.alert("Hello weclome")
+        
+        console.log ("feedback in login page",response.data.UserLogin.Feadbacks)
+        this.setState({
+          name:response.data.UserLogin.name,
+          email: response.data.UserLogin.email,
+          token : response.data.UserLogin.token,
+          Fee :response.data.UserLogin.Feadbacks
+        })
+        console.log("state  after feeback login",this.state.Fee)
+        this.LoginUser (this.state.name,this.state.email,this.state.token,this.state.Fee)
+            }
+
+
+
+
+     }
+      
+      catch(err){
+        console.log(err)
+      Alert.alert("Please enter correct Details")
+      
+      }
+
+  }
+
+  LoginUser=(name,email,token,Fee)=>{
+    var data = {name,email,token,Fee}
+    console.log("hahahaha", data)
+    this.props.rawdata(data)
+  }
+
+
 
   render() {
     return (
-      
+      <KeyboardAvoidingView behavior={Platform.OS === "android" ? "padding" : "height"} style={{flex:1}}>
       <View style={{backgroundColor: '#f0f8ff', flex: 1}}>
         <View style={styles.container1}>
           <View style={{flexDirection: 'row', alignSelf: 'center'}}>
@@ -127,7 +148,7 @@ class Login extends Component {
           </View>
         </View>
 
-        <View style={{paddingTop: 50}}>
+        <View style={{paddingTop: 30}}>
           <Text style={{fontSize: 40, color: 'black', alignSelf: 'center',fontWeight:'bold'}}>
             Login
           </Text>
@@ -167,10 +188,11 @@ class Login extends Component {
                 this.onPasswordCheck(f);
               }}
               style={styles.inputField}
-              placeholder="*****">
+              placeholder="*********"
+              secureTextEntry={this.state.psw}>
               
             </TextInput>
-            <TouchableOpacity style={{alignSelf:"flex-end",position:"absolute", top:15,right:7}}>{eye}</TouchableOpacity>
+            <TouchableOpacity style={{alignSelf:"flex-end",position:"absolute", top:15,right:7}} onPress={()=>{this.setState({psw:false})}}>{eye}</TouchableOpacity>
             <Text style={{paddingLeft: 10, color: 'red'}}>
               {this.state.checkPassword}
             </Text>
@@ -185,7 +207,7 @@ class Login extends Component {
                height:50
                 }}
   >
-             <Text style={{ color: 'black',fontWeight:'bold' }}>Login</Text>
+             <Text style={{ color: 'black',fontWeight:'bold', fontSize:20 }}>LOGIN</Text>
            </View>
              </TouchableOpacity>
           </View>
@@ -195,24 +217,10 @@ class Login extends Component {
           </TouchableOpacity>
         </View>
       </View>
+      </KeyboardAvoidingView>
     );
   }
 }
-
-function mapStateToProps(state){
-  return{
-    user : state.User
-  }
-}
-
-function mapDispatchToProps(dispatch){
-
-}
-
-
-
-
-
 
 /* Icon For USer */
 const user = <FontAwesome5 name={'user'} solid style={{fontSize:20}}/>;
@@ -221,10 +229,9 @@ const eye = <FontAwesome5 name={'eye-slash'} solid style={{fontSize:20}} />;
 /* Styles */
 const styles = StyleSheet.create({
   container1: {
-    paddingTop: 120,
     maxWidth: 500,
     justifyContent: 'center',
-   
+    paddingTop: 110,
   },
   Username: {
     fontSize: 18,
@@ -243,6 +250,21 @@ const styles = StyleSheet.create({
     fontSize:20,
   },
 });
+const mapStateToProps = (state) => {
 
-export default Login;
+
+  return {
+    data: state.data.rawdata,
+    
+  };
+};
+
+const mapDispatchToProps = (dispatch) => {
+  return {
+    
+    rawdata: (data) => dispatch(rawdata(data)),
+  };
+};
+
+export default connect(mapStateToProps, mapDispatchToProps)(Login);
 

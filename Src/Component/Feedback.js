@@ -1,335 +1,137 @@
 import React, { Component } from "react";
-import { View,Text,Image,TouchableOpacity } from "react-native";
-import { ScrollView, TextInput } from "react-native-gesture-handler";
+import { View,Text,Image,TouchableOpacity, Alert,StyleSheet } from "react-native";
+import { FlatList, ScrollView, TextInput } from "react-native-gesture-handler";
 import { SafeAreaView } from "react-native-safe-area-context";
+import { connect } from "react-redux";
+import FontAwesome5 from 'react-native-vector-icons/FontAwesome5';
+import axios from "axios";
+import FeedbackComponent from "./FeedbackComponent";
 
 class Feedback extends Component{
-    constructor(){
-        super()
-        this.state={
-           Charac:"",
-           Counter:0 
-        }
+  constructor(props){
+    super(props)
+    this.state={
+      data:[],
+      token:'',
+      Filterdata:[],
+      search:''
     }
-   chagedInText =(event)=>{
-     this.setState({
-         Charac:event,
-         Counter:Counter+1
-     })
-   }
+  }
+    
+  
+
+  renderComponent = ({item}) =>{
+    return(
+
+    <FeedbackComponent name={item.name} email={item.email} token={item.token}/>
+
+    )
+    }
+componentDidMount(){
+var config = {
+  method: "post",
+  url: "https://quiet-harbor-07900.herokuapp.com/GetAllRecievers",
+  headers: {
+      'accept':' */*',
+       'Authorization': `Bearer ${this.props.token}`,
+      'Content-Type': 'application/json', 
+  },
+  data:{'token':this.props.token},
+};
+
+
+ axios(config)
+.then(response => {
+
+  console.log(response.data);
+  if (response.status === 200) {
+      this.setState({
+          data: response.data,
+          Filterdata:response.data,
+          search:""
+
+          
+      });
+      console.log("after component did mounnt",this.state.data)
+
+  }
+  
+  })
+  .catch(function(error) {
+  
+      console.log(error);
+      alert("There might me an network error")
+      
+      }
+
+  )
+
+  
+
+}
+
+search=(event)=>{
+if(event.length!==0){
+  const newdata = this.state.data.filter(function(item){
+const itemdata = item._id?item.name.toUpperCase():"".toUpperCase()
+const textdata = event.toUpperCase()
+return itemdata.indexOf(textdata) > -1;
+  }) 
+this.setState({Filterdata:newdata})
+this.setState({search:event})
+
+}
+else{
+  this.setState({
+    Filterdata:this.state.data
+  })
+  this.setState({search:event})
+}
+}
+
+
+
 
 
 render(){
     return(
-        <SafeAreaView>
-        <ScrollView>
-            <View style={{backgroundColor:'#f0f8ff' , flex:1}}> 
-        <View style={{padding:10, backgroundColor:'white', borderWidth:1}}>
-            <View style={{backgroundColor:'#87cefa',padding:10,borderWidth:1}}>
-                        <View style={{padding:10,}} > 
-                        <Image style={{alignSelf:"center",width:120,height:120,borderRadius:120/2}} source={require('../images/girl.jpg')} />
-                       </View>
-                       <View>
-                        <Text style={{fontSize:22,fontWeight:"bold",alignSelf:"center"}}>Chaitra B</Text>
-                        </View>
-                        <View
-                            style={{
-                                 borderBottomColor: 'black',
-                                         borderBottomWidth: 1, paddingTop:10   }}/>
-                            
-                        <View style={{padding:10}}>
-                          <TextInput 
-                          value={this.state.Charac}
-                          style={{fontSize:20,borderColor:'grey',borderWidth:2,height:120,borderRadius:10}} placeholder="Write Your Feedback Here"
-                          onChangeText={(event)=>this.chagedInText(event)}
-                          />  
-                        </View>        
-                        <View style={{paddingLeft:10,paddingRight:10,flexDirection:"row",justifyContent:"space-between"}}>
-                        <Text style={{fontSize:15}}> Max 100 Character </Text>
-                        <Text style={{fontSize:15}}>{this.state.Counter}/100</Text>
-                         </View>   
-                         <TouchableOpacity style={{paddingTop:20,paddingLeft:10,paddingRight:10}}>
-                        <View style={{
-                        backgroundColor: '#6495ed',
-                         alignItems: 'center', 
-                        borderRadius: 5,
-                        height:60,
-                        width:200,
-                        alignSelf:'flex-end'
-                            }}
-                                    >
-                             <Text style={{ color: 'white',fontWeight:'bold',fontSize:22,paddingTop:10 }}>Submit Feedback</Text>
-                                </View>
-                                </TouchableOpacity>
-                                </View>
+      <SafeAreaView>
+      
+      <TextInput      
+                      style={style.InputText}
+                      onChangeText={(event) => this.search(event)}
+                      value={this.state.search}
+                      placeholder="   Please Search The Name Here"
+                  />
+                  <TouchableOpacity style={{alignSelf:"flex-end",position:"absolute", top:19,right:25}}>{search}</TouchableOpacity>
 
-        </View>
+          <FlatList keyExtractor={(item)=>item._id} data={this.state.Filterdata}  renderItem={this.renderComponent} >
 
-        {/* 2nd  */}
-
-        <View style={{padding:10, backgroundColor:'white', borderWidth:1}}>
-            <View style={{backgroundColor:'#87cefa',padding:10,borderWidth:1}}>
-                        <View style={{padding:10,}} > 
-                        <Image style={{alignSelf:"center",width:120,height:120,borderRadius:120/2}} source={require('../images/OIP.jpg')} />
-                       </View>
-                       <View>
-                        <Text style={{fontSize:22,fontWeight:"bold",alignSelf:"center"}}>Shashank Wankhede</Text>
-                        </View>
-                        <View
-                            style={{
-                                 borderBottomColor: 'black',
-                                         borderBottomWidth: 1, paddingTop:10   }}/>
-                            
-                        <View style={{padding:10}}>
-                          <TextInput 
-                          value={this.state.Charac}
-                          style={{fontSize:20,borderColor:'grey',borderWidth:2,height:120,borderRadius:10}} placeholder="Write Your Feedback Here"
-                          onChangeText={(event)=>this.chagedInText(event)}
-                          />  
-                        </View>        
-                        <View style={{paddingLeft:10,paddingRight:10,flexDirection:"row",justifyContent:"space-between"}}>
-                        <Text style={{fontSize:15}}> Max 100 Character </Text>
-                        <Text style={{fontSize:15}}>{this.state.Counter}/100</Text>
-                         </View>   
-                         <TouchableOpacity style={{paddingTop:20,paddingLeft:10,paddingRight:10}}>
-                        <View style={{
-                        backgroundColor: '#6495ed',
-                         alignItems: 'center', 
-                        borderRadius: 5,
-                        height:60,
-                        width:200,
-                        alignSelf:'flex-end'
-                            }}
-                                    >
-                             <Text style={{ color: 'white',fontWeight:'bold',fontSize:22,paddingTop:10 }}>Submit Feedback</Text>
-                                </View>
-                                </TouchableOpacity>
-                                </View>
-        </View>
-
-
-        {/* 3 */}
-
-        <View style={{padding:10, backgroundColor:'white', borderWidth:1}}>
-            <View style={{backgroundColor:'#87cefa',padding:10,borderWidth:1}}>
-                        <View style={{padding:10,}} > 
-                        <Image style={{alignSelf:"center",width:120,height:120,borderRadius:120/2}} source={require('../images/OIP.jpg')} />
-                       </View>
-                       <View>
-                        <Text style={{fontSize:22,fontWeight:"bold",alignSelf:"center"}}>Akshat Jain</Text>
-                        </View>
-                        <View
-                            style={{
-                                 borderBottomColor: 'black',
-                                         borderBottomWidth: 1, paddingTop:10   }}/>
-                            
-                        <View style={{padding:10}}>
-                          <TextInput 
-                          value={this.state.Charac}
-                          style={{fontSize:20,borderColor:'grey',borderWidth:2,height:120,borderRadius:10}} placeholder="Write Your Feedback Here"
-                          onChangeText={(event)=>this.chagedInText(event)}
-                          />  
-                        </View>        
-                        <View style={{paddingLeft:10,paddingRight:10,flexDirection:"row",justifyContent:"space-between"}}>
-                        <Text style={{fontSize:15}}> Max 100 Character </Text>
-                        <Text style={{fontSize:15}}>{this.state.Counter}/100</Text>
-                         </View>   
-                         <TouchableOpacity style={{paddingTop:20,paddingLeft:10,paddingRight:10}}>
-                        <View style={{
-                        backgroundColor: '#6495ed',
-                         alignItems: 'center', 
-                        borderRadius: 5,
-                        height:60,
-                        width:200,
-                        alignSelf:'flex-end'
-                            }}
-                                    >
-                             <Text style={{ color: 'white',fontWeight:'bold',fontSize:22,paddingTop:10 }}>Submit Feedback</Text>
-                                </View>
-                                </TouchableOpacity>
-                                </View>
-
-        </View>
-
-
-        {/* 4 */}
-
-
-
-         <View style={{padding:10, backgroundColor:'white', borderWidth:1}}>
-            <View style={{backgroundColor:'#87cefa',padding:10,borderWidth:1}}>
-                        <View style={{padding:10,}} > 
-                        <Image style={{alignSelf:"center",width:120,height:120,borderRadius:120/2}} source={require('../images/OIP.jpg')} />
-                       </View>
-                       <View>
-                        <Text style={{fontSize:22,fontWeight:"bold",alignSelf:"center"}}>Akash Kumavat</Text>
-                        </View>
-                        <View
-                            style={{
-                                 borderBottomColor: 'black',
-                                         borderBottomWidth: 1, paddingTop:10   }}/>
-                            
-                        <View style={{padding:10}}>
-                          <TextInput 
-                          value={this.state.Charac}
-                          style={{fontSize:20,borderColor:'grey',borderWidth:2,height:120,borderRadius:10}} placeholder="Write Your Feedback Here"
-                          onChangeText={(event)=>this.chagedInText(event)}
-                          />  
-                        </View>        
-                        <View style={{paddingLeft:10,paddingRight:10,flexDirection:"row",justifyContent:"space-between"}}>
-                        <Text style={{fontSize:15}}> Max 100 Character </Text>
-                        <Text style={{fontSize:15}}>{this.state.Counter}/100</Text>
-                         </View>   
-                         <TouchableOpacity style={{paddingTop:20,paddingLeft:10,paddingRight:10}}>
-                        <View style={{
-                        backgroundColor: '#6495ed',
-                         alignItems: 'center', 
-                        borderRadius: 5,
-                        height:60,
-                        width:200,
-                        alignSelf:'flex-end'
-                            }}
-                                    >
-                             <Text style={{ color: 'white',fontWeight:'bold',fontSize:22,paddingTop:10 }}>Submit Feedback</Text>
-                                </View>
-                                </TouchableOpacity>
-                                </View>
-
-        </View>
-        {/* 5 */}
-        <View style={{padding:10, backgroundColor:'white', borderWidth:1}}>
-            <View style={{backgroundColor:'#87cefa',padding:10,borderWidth:1}}>
-                        <View style={{padding:10,}} > 
-                        <Image style={{alignSelf:"center",width:120,height:120,borderRadius:120/2}} source={require('../images/OIP.jpg')} />
-                       </View>
-                       <View>
-                        <Text style={{fontSize:22,fontWeight:"bold",alignSelf:"center"}}>Imran Shaikh</Text>
-                        </View>
-                        <View
-                            style={{
-                                 borderBottomColor: 'black',
-                                         borderBottomWidth: 1, paddingTop:10   }}/>
-                            
-                        <View style={{padding:10}}>
-                          <TextInput 
-                          value={this.state.Charac}
-                          style={{fontSize:20,borderColor:'grey',borderWidth:2,height:120,borderRadius:10}} placeholder="Write Your Feedback Here"
-                          onChangeText={(event)=>this.chagedInText(event)}
-                          />  
-                        </View>        
-                        <View style={{paddingLeft:10,paddingRight:10,flexDirection:"row",justifyContent:"space-between"}}>
-                        <Text style={{fontSize:15}}> Max 100 Character </Text>
-                        <Text style={{fontSize:15}}>{this.state.Counter}/100</Text>
-                         </View>   
-                         <TouchableOpacity style={{paddingTop:20,paddingLeft:10,paddingRight:10}}>
-                        <View style={{
-                        backgroundColor: '#6495ed',
-                         alignItems: 'center', 
-                        borderRadius: 5,
-                        height:60,
-                        width:200,
-                        alignSelf:'flex-end'
-                            }}
-                                    >
-                             <Text style={{ color: 'white',fontWeight:'bold',fontSize:22,paddingTop:10 }}>Submit Feedback</Text>
-                                </View>
-                                </TouchableOpacity>
-                                </View>
-
-        </View>
-
-{/* 5 */}
-<View style={{padding:10, backgroundColor:'white', borderWidth:1}}>
-            <View style={{backgroundColor:'#87cefa',padding:10,borderWidth:1}}>
-                        <View style={{padding:10,}} > 
-                        <Image style={{alignSelf:"center",width:120,height:120,borderRadius:120/2}} source={require('../images/OIP.jpg')} />
-                       </View>
-                       <View>
-                        <Text style={{fontSize:22,fontWeight:"bold",alignSelf:"center"}}>Mohan kotak</Text>
-                        </View>
-                        <View
-                            style={{
-                                 borderBottomColor: 'black',
-                                         borderBottomWidth: 1, paddingTop:10   }}/>
-                            
-                        <View style={{padding:10}}>
-                          <TextInput 
-                          value={this.state.Charac}
-                          style={{fontSize:20,borderColor:'grey',borderWidth:2,height:120,borderRadius:10}} placeholder="Write Your Feedback Here"
-                          onChangeText={(event)=>this.chagedInText(event)}
-                          />  
-                        </View>        
-                        <View style={{paddingLeft:10,paddingRight:10,flexDirection:"row",justifyContent:"space-between"}}>
-                        <Text style={{fontSize:15}}> Max 100 Character </Text>
-                        <Text style={{fontSize:15}}>{this.state.Counter}/100</Text>
-                         </View>   
-                         <TouchableOpacity style={{paddingTop:20,paddingLeft:10,paddingRight:10}}>
-                        <View style={{
-                        backgroundColor: '#6495ed',
-                         alignItems: 'center', 
-                        borderRadius: 5,
-                        height:60,
-                        width:200,
-                        alignSelf:'flex-end'
-                            }}
-                                    >
-                             <Text style={{ color: 'white',fontWeight:'bold',fontSize:22,paddingTop:10 }}>Submit Feedback</Text>
-                                </View>
-                                </TouchableOpacity>
-                                </View>
-
-        </View>
-
-        {/* 6 */}
-
-        <View style={{padding:10, backgroundColor:'white', borderWidth:1}}>
-            <View style={{backgroundColor:'#87cefa',padding:10,borderWidth:1}}>
-                        <View style={{padding:10,}} > 
-                        <Image style={{alignSelf:"center",width:120,height:120,borderRadius:120/2}} source={require('../images/girl.jpg')} />
-                       </View>
-                       <View>
-                        <Text style={{fontSize:22,fontWeight:"bold",alignSelf:"center"}}>Prachi Naik</Text>
-                        </View>
-                        <View
-                            style={{
-                                 borderBottomColor: 'black',
-                                         borderBottomWidth: 1, paddingTop:10   }}/>
-                            
-                        <View style={{padding:10}}>
-                          <TextInput 
-                          value={this.state.Charac}
-                          style={{fontSize:20,borderColor:'grey',borderWidth:2,height:120,borderRadius:10}} placeholder="Write Your Feedback Here"
-                          onChangeText={(event)=>this.chagedInText(event)}
-                          />  
-                        </View>        
-                        <View style={{paddingLeft:10,paddingRight:10,flexDirection:"row",justifyContent:"space-between"}}>
-                        <Text style={{fontSize:15}}> Max 100 Character </Text>
-                        <Text style={{fontSize:15}}>{this.state.Counter}/100</Text>
-                         </View>   
-                         <TouchableOpacity style={{paddingTop:20,paddingLeft:10,paddingRight:10}}>
-                        <View style={{
-                        backgroundColor: '#6495ed',
-                         alignItems: 'center', 
-                        borderRadius: 5,
-                        height:60,
-                        width:200,
-                        alignSelf:'flex-end'
-                            }}
-                                    >
-                             <Text style={{ color: 'white',fontWeight:'bold',fontSize:22,paddingTop:10 }}>Submit Feedback</Text>
-                                </View>
-                                </TouchableOpacity>
-                                </View>
-
-        </View>
-
-
-        </View>
-        </ScrollView>
+          </FlatList>
+       
         </SafeAreaView>
 
     )
 }
 }
 
-export default Feedback
+const mapStateToProps = (state) => {
+  return {
+   
+   token:state.data.token,
+   
+    
+  };
+};
+const search = <FontAwesome5 name={'search'} solid style={{fontSize:25}} />;
+
+const style = StyleSheet.create({
+
+  InputText:{
+    height:50,borderWidth:2,borderColor:'black',margin:10, fontSize:20,borderRadius:50
+  }
+
+})
+
+
+export default connect(mapStateToProps,null)(Feedback)
