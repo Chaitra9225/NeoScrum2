@@ -100,7 +100,7 @@ class SignUp extends Component{
 
 
         onPostData = async () => {
-          
+          const {navigation} = this.props
           var data = new FormData();
           let headers = {
             'Accept': 'application/json',
@@ -135,7 +135,7 @@ class SignUp extends Component{
                         onPress: () => console.log("Cancel Pressed"),
                         style: "cancel"
                       },
-                     { text: "OK", onPress: () => this.props.navigation.navigate('Login') }
+                     { text: "OK", onPress: () => navigation.navigate('Login') }
                     ]
                   ); 
                 // Alert.alert(`Password ${response.data.password} Please take Screenshot of it`);

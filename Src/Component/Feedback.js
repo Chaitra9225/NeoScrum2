@@ -1,7 +1,7 @@
 import React, { Component } from "react";
 import { View,Text,Image,TouchableOpacity, Alert,StyleSheet } from "react-native";
 import { FlatList, ScrollView, TextInput } from "react-native-gesture-handler";
-import { SafeAreaView } from "react-native-safe-area-context";
+import { SafeAreaView } from "react-native";
 import { connect } from "react-redux";
 import FontAwesome5 from 'react-native-vector-icons/FontAwesome5';
 import axios from "axios";
@@ -95,7 +95,7 @@ else{
 
 render(){
     return(
-      <SafeAreaView>
+      <SafeAreaView style={{paddingBottom:80}}>
       
       <TextInput      
                       style={style.InputText}
