@@ -17,10 +17,7 @@ class Back extends Component{
   render(){
     return(
       <Drawer.Navigator screenOptions={
-        ({route})=>({
-      
-        
-          
+        ({route})=>({        
       drawerIcon:({ color, size }) => {
             let iconName;
     
@@ -28,9 +25,7 @@ class Back extends Component{
               iconName = 'home'
             } else if (route.name === 'Feedback') {
               iconName = 'comment';
-            }
-    
-    
+            }   
             return <FontAwesome5 name={iconName} size={size} color={color} />;
           },
         })}

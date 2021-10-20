@@ -31,7 +31,6 @@ class SignUp extends Component{
           this.setState({hit:130})
           this.setState({img:image.path})
           this.setState({imguri:image.path})
-        
           var name = image.path;
              this.setState({only : name.replace(/^.*[\\\/]/, '')})
         }).catch(e=>console.log(e));
